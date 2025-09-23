@@ -1,4 +1,4 @@
-import Booking from "../models/booking.js";
+import Booking from "../models/Booking.js";
 // import Destination from "../models/Destination.js";
 import { generatePaymentLink, verifyTransaction } from "../services/flutterwaveServices.js";
 
