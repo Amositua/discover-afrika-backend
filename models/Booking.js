@@ -20,18 +20,23 @@ const bookingSchema = new mongoose.Schema(
       type: Date,
       default: Date.now, 
     },
-    startDate: {
+    visitDate: {
       type: Date,
       required: true, 
     },
-    endDate: {
-      type: Date,
-      required: true, 
-    },
-    numberOfGuests: {
+    // visitTime: {
+    //   type: String,
+    //   required: true, 
+    // },
+    numberOfAdult: {
       type: Number,
       required: true,
-      min: 1,
+      // min: 1,
+    },
+    numberOfChildren: {
+      type: Number,
+      required: true,
+      // min: 1,
     },
     totalPrice: {
       type: Number,
@@ -47,6 +52,15 @@ const bookingSchema = new mongoose.Schema(
       enum: ["unpaid", "paid", "refunded"],
       default: "unpaid",
     },
+    amountPaid: {
+      type: Number,
+      default: 0, 
+    },
+    currency: {
+      type: String,
+      default: "USD", 
+    },
+
     // specialRequests: {
     //   type: String,
     // },

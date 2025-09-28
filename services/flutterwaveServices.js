@@ -1,17 +1,20 @@
 import axios from "axios";
 
-export const generatePaymentLink = async (booking, user) => {
+export const generatePaymentLink = async (booking, req) => {
   const tx_ref = `BOOKING-${booking._id}-${Date.now()}`;
 
   const payload = {
     tx_ref,
-    amount: booking.totalPrice,
+    amount: 1000,
     currency: "NGN",
-    redirect_url: "http://localhost:5000/payment-success", // your frontend success page
+      redirect_url: "http://10.32.163.222:5000/payment-success",
+    // redirect_url: `${req.protocol}://${req.get('host')}/api/bookings/verify-payment`,
+    // redirect_url: "https://localhost:5000/payment-failed",
+    // payment_options: "card,mobilemoney,ussd",
     customer: {
-      email: user.email || "test@example.com",
-      phonenumber: user.phone || "0000000000",
-      name: user.name || "Anonymous",
+      name: req.user.name || "Anonymous",
+      email: req.user.email || "test@example.com",
+      // phonenumber: user.phone || "0000000000",
     },
     customizations: {
       title: "Discover Afrika Booking",
