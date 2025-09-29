@@ -2,7 +2,9 @@ import nodemailer from 'nodemailer';
 
 const sendVerificationEmail = async (email, code) => {
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+   host: "smtp.gmail.com",   // or "smtp.office365.com" for Outlook
+  port: 465,                // use 465 for SSL or 587 for TLS
+  secure: true,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
