@@ -9,30 +9,42 @@ import sendResetPasswordEmail from '../utils/sendResendPasswordEmail.js';
 import sendCongratulationEmail from '../utils/sendCongratulationEmail.js';
 
 export const register = async (req, res) => {
-  const { name, email, phone, password } = req.body;
- 
-  const userExists = await User.findOne({ email });
-  if (userExists) return res.status(400).json({ message: 'User already exists' });
+  try {
+    const { name, email, phone, password } = req.body;
 
-  const duplicatePhone = await User.findOne({ phone });
-  if (duplicatePhone) return res.status(400).json({ message: 'Phone number already in use' });
+    const userExists = await User.findOne({ email });
+    if (userExists) return res.status(400).json({ message: 'User already exists' });
 
-  const verificationCode = Math.floor(10000 + Math.random() * 90000).toString(); // 5-digit code
-  const codeExpires = new Date(Date.now() + 10 * 60 * 1000); // expires in 10 minutes
+    const duplicatePhone = await User.findOne({ phone });
+    if (duplicatePhone) return res.status(400).json({ message: 'Phone number already in use' });
 
-  const user = await User.create({
-    name,
-    email,
-    phone,
-    password,
-    verificationCode,
-    verificationCodeExpires: codeExpires,
-  });
- 
-  await sendVerificationEmail(email, verificationCode);
+    const verificationCode = Math.floor(10000 + Math.random() * 90000).toString(); // 5-digit code
+    const codeExpires = new Date(Date.now() + 10 * 60 * 1000); // expires in 10 minutes
 
-  res.status(201).json({ message: 'Verification code sent to email.', user: { id: user._id, name: user.name, email: user.email, phone: user.phone }, token: '123456' });
+    const user = await User.create({
+      name,
+      email,
+      phone,
+      password,
+      verificationCode,
+      verificationCodeExpires: codeExpires,
+    });
+
+    // 🔎 This is likely throwing
+    await sendVerificationEmail(email, verificationCode);
+
+    res.status(201).json({
+      message: 'Verification code sent to email.',
+      user: { id: user._id, name: user.name, email: user.email, phone: user.phone },
+      token: '123456'
+    });
+
+  } catch (err) {
+    console.error("❌ Error in register:", err.message);
+    res.status(500).json({ message: 'Internal server error', error: err.message });
+  }
 };
+
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
