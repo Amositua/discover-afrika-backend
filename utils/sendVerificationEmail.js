@@ -2,19 +2,13 @@ import nodemailer from 'nodemailer';
 
 const sendVerificationEmail = async (email, code) => {
   const transporter = nodemailer.createTransport({
-   host: "smtp.gmail.com",   // or "smtp.office365.com" for Outlook
-  port: 587,                // use 465 for SSL or 587 for TLS
-  secure: true,
+    service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-    tls: {
-    rejectUnauthorized: false // Add this if you're having SSL issues
-  },
   });
 
-  await transporter.verify();
   await transporter.sendMail({
     from: '"Discover Afrika" <no-reply@richtech.com>',
     to: email,
