@@ -10,7 +10,7 @@ const sendVerificationEmail = async (email, code) => {
   });
 
   await transporter.sendMail({
-    from: '"Discover Afrika" <no-reply@richtech.com>',
+    from: '"Discover Afrika" <amosomohodion@gmail.com>',
     to: email,
     subject: 'Verify Your Email',
     html: `
