@@ -1,8 +1,10 @@
 services:
   - type: web
     name: discover-afrika-api
-    env: docker
+    runtime: docker  # Explicitly set Docker
     dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free  # or starter
     envVars:
       - key: EMAIL_USER
         sync: false
