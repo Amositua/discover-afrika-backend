@@ -11,27 +11,53 @@ import sendCongratulationEmail from '../utils/sendCongratulationEmail.js';
 export const register = async (req, res) => {
   const { name, email, phone, password } = req.body;
  
-  const userExists = await User.findOne({ email });
-  if (userExists) return res.status(400).json({ message: 'User already exists' });
-
-  const duplicatePhone = await User.findOne({ phone });
-  if (duplicatePhone) return res.status(400).json({ message: 'Phone number already in use' });
-
-  const verificationCode = Math.floor(10000 + Math.random() * 90000).toString(); // 5-digit code
-  const codeExpires = new Date(Date.now() + 10 * 60 * 1000); // expires in 10 minutes
-
-  const user = await User.create({
-    name,
-    email,
-    phone,
-    password,
-    verificationCode,
-    verificationCodeExpires: codeExpires,
-  });
- 
-  await sendVerificationEmail(email, verificationCode);
-
-  res.status(201).json({ message: 'Verification code sent to email.', user: { id: user._id, name: user.name, email: user.email, phone: user.phone }, token: '123456' });
+  try {
+    const userExists = await User.findOne({ email });
+    if (userExists) return res.status(400).json({ message: 'User already exists' });
+    
+    const duplicatePhone = await User.findOne({ phone });
+    if (duplicatePhone) return res.status(400).json({ message: 'Phone number already in use' });
+    
+    const verificationCode = Math.floor(10000 + Math.random() * 90000).toString();
+    const codeExpires = new Date(Date.now() + 10 * 60 * 1000);
+    
+    const user = await User.create({
+      name,
+      email,
+      phone,
+      password,
+      verificationCode,
+      verificationCodeExpires: codeExpires,
+    });
+   
+    // Send email with better error handling
+    try {
+      await sendVerificationEmail(email, verificationCode);
+      console.log('Verification email sent successfully');
+    } catch (emailError) {
+      console.error('Email sending failed:', emailError);
+      // Delete the user if email fails
+      await User.findByIdAndDelete(user._id);
+      return res.status(500).json({ 
+        message: 'Failed to send verification email. Please try again.',
+        error: emailError.message 
+      });
+    }
+    
+    res.status(201).json({ 
+      message: 'Verification code sent to email.', 
+      user: { 
+        id: user._id, 
+        name: user.name, 
+        email: user.email, 
+        phone: user.phone 
+      }, 
+      token: '123456' 
+    });
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({ message: 'Registration failed', error: error.message });
+  }
 };
 
 export const login = async (req, res) => {
