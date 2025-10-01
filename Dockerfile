@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 5000
 
 # Start command (adjust to match your start script)
-CMD ["node", "server.js"]
+CMD ["node", "server.js"]
