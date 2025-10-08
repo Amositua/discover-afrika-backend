@@ -32,7 +32,7 @@ export const register = async (req, res) => {
    
     // Send email with better error handling
     try {
-      await sendVerificationEmail(email, verificationCode);
+      await sendResetPasswordEmail(email, verificationCode);
       console.log('Verification email sent successfully');
     } catch (emailError) {
       console.error('Email sending failed:', emailError);
