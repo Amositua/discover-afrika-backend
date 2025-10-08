@@ -3,7 +3,7 @@ import app from "./app.js";
 const PORT = process.env.PORT || 5000;
 
 app.get('/', (req, res) => {
-  res.send('Hello from your server!');
+  res.send('Hello!');
 });
 
 app.get('/payment-success', (req, res) => {
