@@ -7,11 +7,11 @@ const sendVerificationEmail = async (email, code) => {
   }
 
   console.log('Attempting to send email...');
-  console.log('SMTP Host: smtp.gmail.com:587');
+  console.log('SMTP Host: live.smtp.mailtrap.io:587');
   console.log('From:', process.env.EMAIL_USER);
 
   const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
+    host: 'live.smtp.mailtrap.io',
     port: 587,
     secure: false,
     auth: {
