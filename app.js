@@ -16,6 +16,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("✅ MongoDB connected");
+  })
+  .catch(err => console.error("MongoDB connection error:", err));
+
+
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/bookmarks', bookmarkRoutes);
@@ -23,13 +31,5 @@ app.use("/api/bookings", bookingRoutes);
 
 // IMPORTANT: Flutterwave sends JSON, so body-parser must parse raw JSON
 app.use(express.json({ verify: (req, res, buf) => { req.rawBody = buf } }));
-
-
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("✅ MongoDB connected");
-  })
-  .catch(err => console.error("MongoDB connection error:", err));
 
 export default app;
