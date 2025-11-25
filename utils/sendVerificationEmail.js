@@ -24,10 +24,6 @@ const sendVerificationEmail = async (email, code) => {
 
 export default sendVerificationEmail;
 
-
-
-
-
 // import nodemailer from 'nodemailer';
 
 // const sendVerificationEmail = async (email, code) => {
